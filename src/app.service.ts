@@ -3,13 +3,7 @@ import { PrismaService } from './prisma.service';
 
 @Injectable()
 export class AppService {
-  constructor(private prisma: PrismaService) {}
-
-  async createCategory(name: string) {
-    return this.prisma.category.create({
-      data: { name },
-    });
-  }
+  constructor(private readonly prisma: PrismaService) {}
 
   async askFortune(_prompt: string) {
     await Promise.resolve(); // Placeholder await call to satisfy linter

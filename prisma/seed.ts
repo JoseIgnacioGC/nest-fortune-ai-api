@@ -10,33 +10,32 @@ export async function main() {
     prisma.category.create({ data: { name: 'health' } }),
   ]);
 
-  // Create fortunes with categories
-  await prisma.fortune.create({
-    data: {
-      text: 'A wonderful journey awaits you',
-      categories: {
-        connect: [{ id: categories[0].id }, { id: categories[1].id }],
-      },
+  const fortunes = [
+    {
+      fortune: 'A wonderful journey awaits you',
+      categories: [categories[0], categories[1]],
     },
-  });
-
-  await prisma.fortune.create({
-    data: {
-      text: 'Good health and happiness will come your way',
-      categories: {
-        connect: [{ id: categories[2].id }],
-      },
+    {
+      fortune: 'Good health and happiness will come your way',
+      categories: [categories[2]],
     },
-  });
-
-  await prisma.fortune.create({
-    data: {
-      text: 'A new opportunity will present itself soon',
-      categories: {
-        connect: [{ id: categories[1].id }],
-      },
+    {
+      fortune: 'A new opportunity will present itself soon',
+      categories: [categories[1]],
     },
-  });
+  ];
+  await Promise.all(
+    fortunes.map((fortune) =>
+      prisma.fortune.create({
+        data: {
+          fortune: fortune.fortune,
+          categories: {
+            connect: fortune.categories.map((cat) => ({ id: cat.id })),
+          },
+        },
+      }),
+    ),
+  );
 }
 
 main()

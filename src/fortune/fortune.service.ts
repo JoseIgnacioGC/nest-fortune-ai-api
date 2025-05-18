@@ -4,6 +4,7 @@ import { PrismaService } from 'src/prisma.service';
 @Injectable()
 export class FortuneService {
   constructor(private readonly prisma: PrismaService) {}
+
   async getRandomFortune() {
     const count = await this.prisma.fortune.count();
     const skip = Math.floor(Math.random() * count);
@@ -14,7 +15,7 @@ export class FortuneService {
       },
     });
     return {
-      fortune: fortune?.text || 'No fortune available',
+      fortune: fortune?.fortune || 'No fortune available',
       categories: fortune?.categories.map((c) => c.name) || [],
     };
   }
