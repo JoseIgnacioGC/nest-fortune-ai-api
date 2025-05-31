@@ -9,7 +9,7 @@ import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 
 async function bootstrap() {
   const SERVER_PORT: number = Number(process.env.SERVER_PORT ?? 3000);
-  const IA_SERVICE_PORT: number = Number(process.env.IA_SERVICE_PORT ?? 3001);
+  const SERVICE_PACKAGE: string = process.env.SERVICE_PACKAGE ?? 'ai_service';
 
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
@@ -18,12 +18,13 @@ async function bootstrap() {
 
   app.connectMicroservice<MicroserviceOptions>(
     {
-      transport: Transport.TCP,
+      transport: Transport.GRPC,
       options: {
-        port: IA_SERVICE_PORT,
+        package: SERVICE_PACKAGE,
+        protoPath: `./${SERVICE_PACKAGE}/${SERVICE_PACKAGE}.proto`,
       },
     },
-    // to use main app global pipes
+    // to use global pipes
     // {
     //   inheritAppConfig: true,
     // },

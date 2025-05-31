@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package ai_service;
+
+service AiService {
+  rpc Generate(GenerateRequest) returns (GenerateResponse) {}
+}
+
+message GenerateRequest { string prompt = 1; }
+
+message GenerateResponse { string response = 1; }
