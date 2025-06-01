@@ -1,19 +1,27 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Client, ClientGrpc, Transport } from '@nestjs/microservices';
+import { AiServiceController } from './ai-service/ai-service.controller';
+import { map, Observable } from 'rxjs';
 
 @Injectable()
-export class AppService {
-  constructor(private readonly prisma: PrismaService) {}
+export class AppService implements OnModuleInit {
+  @Client({
+    transport: Transport.GRPC,
+    options: {
+      package: 'ai_service',
+      protoPath: './ai_service/ai_service.proto',
+    },
+  })
+  private readonly client: ClientGrpc;
+  private aiService: AiServiceController;
 
-  async askFortune(_prompt: string) {
-    await Promise.resolve(); // Placeholder await call to satisfy linter
+  onModuleInit() {
+    this.aiService = this.client.getService<AiServiceController>('AiService');
+  }
 
-    // In a real application, you might want to use an AI service to generate a contextual fortune
-    // For now, we'll just return a random one
-    throw new HttpException(
-      'not yet implemented',
-      HttpStatus.INTERNAL_SERVER_ERROR,
-    );
-    // return 'nothing right now';
+  askFortune(prompt: string): Observable<string> {
+    return this.aiService
+      .generateFortune({ prompt })
+      .pipe(map((res) => res.response));
   }
 }
