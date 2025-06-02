@@ -1,0 +1,32 @@
+[project]
+name = "ai-service"
+version = "0.1.0"
+description = ""
+authors = [{ name = "Jose Leiva", email = "email.joseleiva@gmail.com" }]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = ["grpcio (>=1.71.0,<2.0.0)", "grpcio-tools (>=1.71.0,<2.0.0)", "transformers (>=4.52.4,<5.0.0)", "torch (>=2.7.0,<3.0.0)"]
+
+[tool.poe.tasks]
+format = "black src"
+start = "python -m src.main"
+ai = "python -m src.model.model"
+# dev = "watchmedo auto-restart --patterns='*.py' --recursive -- python -m src.main"
+grpc_generate = """\
+    python -m grpc_tools.protoc -I. \
+    --proto_path=./../shared/grpc/ ./../shared/grpc/ai_service.proto \
+    --python_out=./src/ai_service/ \
+    --grpc_python_out=./src/ai_service/ \
+    --pyi_out=./src/ai_service/ \
+    """
+
+[tool.poetry]
+packages = [{ include = "ai_service", from = "src" }]
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
