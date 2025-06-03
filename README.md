@@ -21,7 +21,9 @@ This monorepo contains a Fortune Telling application with three main components:
 ## Installations
 
 ```bash
+npm i -g @nestjs/cli
 pipx install poetry poethepoet
+
 ```
 
 ## Starting the Application
