@@ -21,7 +21,7 @@ async function bootstrap() {
       transport: Transport.GRPC,
       options: {
         package: SERVICE_PACKAGE,
-        protoPath: `./${SERVICE_PACKAGE}/${SERVICE_PACKAGE}.proto`,
+        protoPath: `../shared/grpc/${SERVICE_PACKAGE}.proto`,
       },
     },
     // to use global pipes
