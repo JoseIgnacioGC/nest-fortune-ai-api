@@ -24,8 +24,9 @@ export class AppService implements OnModuleInit {
   }
 
   askFortune(prompt: string): Observable<string> {
-    return this.aiService
+    const reponse = this.aiService
       .generateFortune({ prompt })
       .pipe(map((res) => res.response));
+    return reponse;
   }
 }
